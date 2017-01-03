@@ -9,10 +9,19 @@ use <probe.scad>
 
 $fn=25;
 
-//%rotate([0,180,0]) translate([-100,0,15]) x_carriage();
+//%rotate([0,180,0]) translate([-100,0,5]) x_carriage();
 
 module extruder() {
 	%cube([55, 95, 25]);
+}
+
+module zip_hole() {
+	hull() {
+		cylinder(r=3, h=20);
+		translate([0, 3, 0]) {
+			cylinder(r=3, h=20);
+		}
+	}
 }
 
 module back_plate() {
@@ -38,27 +47,28 @@ module dual_mount() {
 			union() {
 				back_plate();
 				translate([-10,19,0]) mount_plate();
+
+				translate([-5, 25, 1]) nema17_rest();
+				translate([53, 25, 1]) nema17_rest();
+
+				translate([5, 20, 22])
+					rotate(90, [1,0,0]) z_probe_mount();
+
+				translate([94, 20, 22])
+					rotate(90, [1,0,0]) z_probe_mount();
 			}
 
 			translate([-2, 28, -1]) cube([45, 47, 30]);
 			translate([56, 28, -1]) cube([45, 47, 30]);
 
+			translate([-4, 90, -10]) zip_hole();
+			translate([104, 90, -10]) zip_hole();
+
 		}
-
-		translate([-5, 25, 1]) nema17_rest();
-		translate([53, 25, 1]) nema17_rest();
-
 	}
 
 	//translate([-2, -28.5, 38]) extruder();
 	//translate([59, -28.5, 38]) extruder();
-
-	translate([5, 20, 22])
-	rotate(90, [1,0,0]) z_probe_mount();
-
-	translate([94, 20, 22])
-	rotate(90, [1,0,0]) z_probe_mount();
-
 }
 
 dual_mount();
